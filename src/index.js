@@ -2,6 +2,7 @@ const connection = require("./db-config");
 
 const express = require("express");
 const movies = require("./movies");
+const { connect } = require("./db-config");
 const port = 3000;
 const app = express();
 
@@ -13,6 +14,8 @@ connection.connect(function (err) {
 
   console.log("connected as id " + connection.threadId);
 });
+
+app.use(express.json());
 
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
@@ -62,6 +65,48 @@ app.get("/api/search", (req, res) => {
   );
 });
 
+//Création d'une route POST pour ajouter un nouveau film
+
+app.post("/api/movies", (req, res) => {
+  const { title, director, year, color, duration } = req.body;
+  connection.query(
+    "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
+    [title, director, year, color, duration],
+    (err, result) => {
+      if (err) {
+        res.status(500).send("Error saving the movie");
+      } else {
+        res.status(201).send("Movie successfully saved");
+      }
+    }
+  );
+});
+
+//Création d'une route POST pour ajouter un nouveau user
+
+app.post("/api/users", (req, res) => {
+  const { firstname, lastname, email } = req.body;
+  connection.query(
+    "INSERT INTO users(firstname, lastname, email) VALUES (?, ?, ?)",
+    [firstname, lastname, email],
+    (err, result) => {
+      if (err) {
+        res.status(500).send("Error saving new user");
+      } else {
+        res.status(201).send("User correctly saved");
+      }
+    }
+  );
+});
+
+//Création d'une route GET pour visualiser la liste des users
+
 app.get("/api/users", (req, res) => {
-  response.status(404).send("unauthorized");
+  connection.query("SELECT * FROM users", (err, results) => {
+    if (err) {
+      res.status(404).send("Fail to reach users");
+    } else {
+      res.status(200).json(results);
+    }
+  });
 });
