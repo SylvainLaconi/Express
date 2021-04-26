@@ -21,9 +21,13 @@ app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
 
+//Création d'une route GET pour afficher la page home
+
 app.get("/", (req, res) => {
   res.send("Welcome to my favourite movie list");
 });
+
+//Création d'une route GET pour afficher tous les movies
 
 app.get("/api/movies", (req, res) => {
   connection.query("SELECT * from movies", (err, results) => {
@@ -34,6 +38,8 @@ app.get("/api/movies", (req, res) => {
     }
   });
 });
+
+//Création d'une route GET pour sélection d'un movie par son id
 
 app.get("/api/movies/:id", (req, res) => {
   connection.query(
@@ -49,6 +55,8 @@ app.get("/api/movies/:id", (req, res) => {
     }
   );
 });
+
+//Création d'une route GET pour sélection des movies sur leur duration
 
 app.get("/api/search", (req, res) => {
   connection.query(
@@ -104,7 +112,7 @@ app.post("/api/users", (req, res) => {
 app.get("/api/users", (req, res) => {
   connection.query("SELECT * FROM users", (err, results) => {
     if (err) {
-      res.status(404).send("Fail to reach users");
+      res.status(500).send("Fail to reach users");
     } else {
       res.status(200).json(results);
     }
