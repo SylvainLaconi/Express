@@ -118,3 +118,41 @@ app.get("/api/users", (req, res) => {
     }
   });
 });
+
+//Création d'une route PUT pour modifier un user
+
+app.put("/api/users/:id", (req, res) => {
+  const userId = req.params.id;
+  const userPropsToUpdate = req.body;
+  connection.query(
+    "UPDATE users SET ? WHERE id = ?",
+    [userPropsToUpdate, userId],
+    (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error updating a user");
+      } else {
+        res.status(200).send("User updated successfully 🎉");
+      }
+    }
+  );
+});
+
+//Création d'une route PUT pour modifier un movie
+
+app.put("/api/movies/:id", (req, res) => {
+  const movieId = req.params.id;
+  const moviePropsToUpdate = req.body;
+  connection.query(
+    "UPDATE movies SET ? WHERE id = ?",
+    [moviePropsToUpdate, movieId],
+    (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error updating a movie");
+      } else {
+        res.status(200).send("Movie updated successfully 🎉");
+      }
+    }
+  );
+});
